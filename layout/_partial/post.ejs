@@ -91,16 +91,26 @@
         <% } %>
         <time itemprop="dateCreated datePublished" datetime="<%- moment(post.date).format() %>"><%= date(post.date, config.date_format) %></time>
         <% if (post.categories && post.categories.length > 0) { %>
-          <span class="dot"></span>
-          <%- list_categories(post.categories, {
-              show_count: false,
-              separator: '<span class="sep"></span>',
-              style: 'none'
-              }) %>
-          <% for(cat of post.categories.toArray()){ %>
-            <span hidden itemprop="about" itemscope itemtype="https://schema.org.cn/Thing">
-              <a href="<%- url_for(cat.path) %>" itemprop="url"><span itemprop="name"><%- cat.name %></span></a>
-            </span>
+          <% 
+            let contains_essays = false;
+            for(cat of post.categories.toArray()) {
+                if(cat.name == 'essays') {
+                    contains_essays = true;
+                    break;
+                }
+            }
+            if(!contains_essays) { %>
+              <span class="dot"></span>
+              <%- list_categories(post.categories, {
+                  show_count: false,
+                  separator: '<span class="sep"></span>',
+                  style: 'none'
+                  }) %>
+              <% for(cat of post.categories.toArray()){ %>
+                <span hidden itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="<%- url_for(cat.path) %>" itemprop="url"><span itemprop="name"><%- cat.name %></span></a>
+                </span>
+              <% } %>
           <% } %>
         <% } %>
       </div>
